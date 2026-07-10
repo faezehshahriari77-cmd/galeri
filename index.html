@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>گالری هنری استاد و هنرجو</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
+
+*{
+    box-sizing:border-box;
+    font-family:Vazirmatn;
+}
+
+body{
+    margin:0;
+    background:#f7f2eb;
+    color:#333;
+}
+
+
+/* Header */
+
+header{
+    background:linear-gradient(135deg,#42275a,#734b6d);
+    color:white;
+    padding:40px;
+    text-align:center;
+}
+
+header h1{
+    font-size:40px;
+}
+
+header p{
+    font-size:18px;
+}
+
+
+
+/* Login */
+
+.login-box{
+
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    margin:40px auto;
+    flex-wrap:wrap;
+
+}
+
+
+.card{
+
+    background:white;
+    width:320px;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 10px 30px #0002;
+    text-align:center;
+    transition:.3s;
+
+}
+
+
+.card:hover{
+    transform:translateY(-10px);
+}
+
+
+button{
+
+    background:#734b6d;
+    color:white;
+    border:none;
+    padding:12px 30px;
+    border-radius:30px;
+    cursor:pointer;
+    margin-top:15px;
+}
+
+
+button:hover{
+
+background:#42275a;
+
+}
+
+
+
+input,textarea{
+
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:15px;
+border:1px solid #ddd;
+
+}
+
+
+
+/* Dashboard */
+
+
+.dashboard{
+
+display:none;
+padding:40px;
+
+}
+
+
+.panel{
+
+background:white;
+padding:30px;
+border-radius:25px;
+box-shadow:0 10px 30px #0002;
+
+}
+
+
+.gallery{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-top:20px;
+
+}
+
+
+.art{
+
+background:#fff;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 5px 20px #0002;
+
+}
+
+
+.art img{
+
+width:100%;
+height:220px;
+object-fit:cover;
+
+}
+
+
+.art h3{
+
+padding:10px;
+
+}
+
+
+
+
+footer{
+
+background:#42275a;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:50px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<header>
+
+<h1>🎨 گالری هنری رنگ و خیال</h1>
+
+<p>
+فضایی برای نمایش آثار استاد و هنرجویان هنر
+</p>
+
+</header>
+
+
+
+
+<section class="login-box">
+
+
+<div class="card">
+
+<h2>👩‍🏫 ورود استاد</h2>
+
+<input id="teacherUser" placeholder="نام کاربری">
+
+<input id="teacherPass" type="password" placeholder="رمز عبور">
+
+
+<button onclick="teacherLogin()">
+ورود استاد
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h2>👩‍🎨 ورود هنرجو</h2>
+
+
+<input id="studentUser" placeholder="نام کاربری">
+
+
+<input id="studentPass" type="password" placeholder="رمز عبور">
+
+
+<button onclick="studentLogin()">
+ورود هنرجو
+</button>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- استاد -->
+
+
+<section id="teacherPanel" class="dashboard">
+
+
+<div class="panel">
+
+<h2>پنل استاد 🎓</h2>
+
+<p>
+در این بخش استاد می‌تواند آثار جدید به گالری اضافه کند.
+</p>
+
+
+<input id="artTitle" placeholder="عنوان اثر">
+
+
+<input id="artImage" placeholder="آدرس تصویر">
+
+
+<textarea id="artDesc" placeholder="توضیح اثر"></textarea>
+
+
+<button onclick="addArt()">
+افزودن اثر
+</button>
+
+
+<button onclick="logout()">
+خروج
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<!-- هنرجو -->
+
+
+<section id="studentPanel" class="dashboard">
+
+
+<div class="panel">
+
+
+<h2>
+پنل هنرجو 🖌️
+</h2>
+
+
+<p>
+مشاهده آثار گالری
+</p>
+
+
+<div id="gallery" class="gallery"></div>
+
+
+
+<button onclick="logout()">
+خروج
+</button>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<footer>
+
+ساخته شده برای گالری هنری آموزشی
+
+</footer>
+
+
+
+
+
+
+
+<script>
+
+
+let arts=[
+
+{
+title:"نقاشی آبرنگ",
+img:"https://picsum.photos/400/300",
+desc:"اثر هنری نمونه"
+},
+
+
+{
+title:"طراحی گرافیک",
+img:"https://picsum.photos/401/300",
+desc:"تمرین هنرجو"
+}
+
+];
+
+
+
+// ورود استاد
+
+function teacherLogin(){
+
+
+let user=document.getElementById("teacherUser").value;
+let pass=document.getElementById("teacherPass").value;
+
+
+if(user==="ostad" && pass==="1234"){
+
+
+document.querySelector(".login-box").style.display="none";
+
+document.getElementById("teacherPanel").style.display="block";
+
+
+}
+
+else{
+
+alert("نام کاربری یا رمز استاد اشتباه است");
+
+}
+
+
+
+}
+
+
+
+
+// ورود هنرجو
+
+
+function studentLogin(){
+
+
+let user=document.getElementById("studentUser").value;
+let pass=document.getElementById("studentPass").value;
+
+
+if(user==="honarjoo" && pass==="1234"){
+
+
+document.querySelector(".login-box").style.display="none";
+
+document.getElementById("studentPanel").style.display="block";
+
+
+showArts();
+
+
+}
+
+else{
+
+alert("نام کاربری یا رمز هنرجو اشتباه است");
+
+}
+
+
+}
+
+
+
+
+// افزودن اثر
+
+
+function addArt(){
+
+
+let title=document.getElementById("artTitle").value;
+
+let img=document.getElementById("artImage").value;
+
+let desc=document.getElementById("artDesc").value;
+
+
+
+arts.push({
+
+title:title,
+img:img,
+desc:desc
+
+});
+
+
+alert("اثر اضافه شد");
+
+
+
+}
+
+
+
+
+// نمایش گالری
+
+
+function showArts(){
+
+
+let box=document.getElementById("gallery");
+
+box.innerHTML="";
+
+
+arts.forEach(a=>{
+
+
+box.innerHTML+=`
+
+<div class="art">
+
+<img src="${a.img}">
+
+<h3>${a.title}</h3>
+
+<p>${a.desc}</p>
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+function logout(){
+
+
+location.reload();
+
+
+}
+
+
+
+</script>
+
+
+
+</body>
+</html>
